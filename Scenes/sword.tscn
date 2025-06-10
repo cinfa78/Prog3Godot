@@ -1,18 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://cqsovhp0ekvtj"]
+[gd_scene load_steps=5 format=3 uid="uid://cqsovhp0ekvtj"]
 
 [ext_resource type="Script" uid="uid://cqu3wp46x8nrn" path="res://Scenes/sword.gd" id="1_6wdhb"]
 [ext_resource type="Texture2D" uid="uid://dgyytq58n4d70" path="res://Graphics/colored_tilemap_packed.png" id="1_goa0h"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_goa0h"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_6wdhb"]
+radius = 5.0
+
 [node name="sword" type="RigidBody2D"]
-collision_layer = 2
+collision_layer = 0
 collision_mask = 2
 gravity_scale = 0.0
 script = ExtResource("1_6wdhb")
 angleAcceleration = 20
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_goa0h")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -25,4 +32,9 @@ region_rect = Rect2(48, 32, 8, 8)
 wait_time = 0.2
 autostart = true
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_6wdhb")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="timeout" from="SelfDestruct" to="." method="_on_self_destruct_timeout"]

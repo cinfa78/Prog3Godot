@@ -211,7 +211,7 @@ zoom = Vector2(4, 4)
 editor_draw_drag_margin = true
 
 [node name="Player" parent="." instance=ExtResource("2_qxrlw")]
-position = Vector2(4, -4)
+position = Vector2(11, -10)
 
 [node name="Enemy" parent="." instance=ExtResource("4_wowpa")]
 position = Vector2(-3, 11)
