@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqsovhp0ekvtj"]
+
+[ext_resource type="Script" uid="uid://cqu3wp46x8nrn" path="res://Scenes/sword.gd" id="1_6wdhb"]
+[ext_resource type="Texture2D" uid="uid://dgyytq58n4d70" path="res://Graphics/colored_tilemap_packed.png" id="1_goa0h"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_goa0h"]
+
+[node name="sword" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 2
+gravity_scale = 0.0
+script = ExtResource("1_6wdhb")
+angleAcceleration = 20
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_goa0h")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_goa0h")
+region_enabled = true
+region_rect = Rect2(48, 32, 8, 8)
+
+[node name="SelfDestruct" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true
+
+[connection signal="timeout" from="SelfDestruct" to="." method="_on_self_destruct_timeout"]
