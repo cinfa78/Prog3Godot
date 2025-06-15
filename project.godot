@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Prog3Godot"
-run/main_scene="uid://b21yubqtkw784"
+run/main_scene="uid://d4m7al8fwgw8g"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
