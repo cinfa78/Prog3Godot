@@ -21,6 +21,12 @@ window/size/viewport_width=800
 window/size/viewport_height=600
 window/stretch/scale_mode="integer"
 
+[importer_defaults]
+
+oggvorbisstr={
+&"loop": true
+}
+
 [input]
 
 MoveLeft={
