@@ -13,15 +13,11 @@ var force:Vector2
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	contact_monitor = true
-	max_contacts_reported = 5
+	max_contacts_reported = 1;
 	gravity_scale = 0.166
-	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	force = Input.get_vector("MoveLeft","MoveRight","MoveDown","MoveUp")
-	
 	left_thrust_particles.emitting = force.x>0
 	right_thrust_particles.emitting = force.x<0
 	bottom_thrust_particles.emitting = force.y>0
@@ -40,3 +36,5 @@ func _on_body_entered(body):
 	print("_on_body_entered "+(str)(linear_velocity.length()))
 	if abs(linear_velocity.y)> maxVVelocity or abs(linear_velocity.x)>maxHVelocity:
 		$AudioStreamPlayer3D.play();
+	if body.is_in_group("Landing"):
+		print("vittoria")

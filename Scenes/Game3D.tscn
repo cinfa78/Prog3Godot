@@ -1,6 +1,5 @@
-[gd_scene load_steps=23 format=3 uid="uid://d4m7al8fwgw8g"]
+[gd_scene load_steps=27 format=3 uid="uid://d4m7al8fwgw8g"]
 
-[ext_resource type="Material" uid="uid://biia07jgdcf3" path="res://Graphics/Gray.tres" id="1_6o5a5"]
 [ext_resource type="Material" uid="uid://dtfr17u4b11cu" path="res://Graphics/Red.tres" id="1_xin6i"]
 [ext_resource type="Script" uid="uid://d0xbpy21i7q0t" path="res://Scenes/ball.gd" id="2_mcpu6"]
 [ext_resource type="AudioStream" uid="uid://b6knyqloen0rl" path="res://Audio/steam.ogg" id="4_bbqu6"]
@@ -10,19 +9,6 @@
 [ext_resource type="Material" uid="uid://y6vmp7d1lbft" path="res://Graphics/Gold.tres" id="6_p0ojs"]
 [ext_resource type="PackedScene" uid="uid://b0nt4n13a6448" path="res://addons/starlight/Stars.tscn" id="7_l5r3m"]
 [ext_resource type="Script" uid="uid://clxpo3p66wqev" path="res://addons/starlight/StarGenerator.gd" id="8_qbj3y"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_um4qg"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-
-[sub_resource type="Sky" id="Sky_0p3xs"]
-sky_material = SubResource("ProceduralSkyMaterial_um4qg")
-
-[sub_resource type="Environment" id="Environment_svmpl"]
-background_mode = 2
-sky = SubResource("Sky_0p3xs")
-tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_um4qg"]
 size = Vector3(50, 0.1, 50)
@@ -48,6 +34,24 @@ rings = 4
 height = 0.228516
 radius = 0.230469
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bbqu6"]
+height = 1.0
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_um4qg"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_0p3xs"]
+sky_material = SubResource("ProceduralSkyMaterial_um4qg")
+
+[sub_resource type="Environment" id="Environment_svmpl"]
+background_mode = 2
+sky = SubResource("Sky_0p3xs")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_6o5a5"]
+
 [sub_resource type="Environment" id="Environment_uny31"]
 background_mode = 2
 ambient_light_source = 3
@@ -57,69 +61,83 @@ glow_enabled = true
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_svmpl"]
 dof_blur_far_distance = 7.0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_bbqu6"]
-height = 1.0
+[sub_resource type="ViewportTexture" id="ViewportTexture_6o5a5"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p0ojs"]
+albedo_texture = SubResource("ViewportTexture_6o5a5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m08qq"]
+resource_local_to_scene = true
+emission_enabled = true
+emission_operator = 1
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m08qq"]
+material = SubResource("StandardMaterial3D_m08qq")
+size = Vector2(1, 1)
+subdivide_width = 3
+subdivide_depth = 3
 
 [node name="Game3D" type="Node3D"]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_svmpl")
+[node name="SubViewport" type="SubViewport" parent="."]
 
-[node name="Floor" type="StaticBody3D" parent="." groups=["Moon"]]
+[node name="Floor" type="StaticBody3D" parent="SubViewport" groups=["Moon"]]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Floor"]
-transform = Transform3D(1, 0, 0, 0, 0.018, 0, 0, 0, 1, 0, 0, 0)
-material_override = ExtResource("1_6o5a5")
+[node name="CSGBox3D" type="CSGBox3D" parent="SubViewport/Floor"]
+material_override = ExtResource("1_xin6i")
 size = Vector3(50, 0.1, 50)
-material = ExtResource("1_xin6i")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewport/Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00192887, 0, 0.0140686)
 shape = SubResource("BoxShape3D_um4qg")
 
-[node name="Lander" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 5, 0)
+[node name="Lander" type="RigidBody3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.26764, 3.51844, 4.76837e-07)
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
 mass = 2.0
 physics_material_override = SubResource("PhysicsMaterial_0p3xs")
 script = ExtResource("2_mcpu6")
 maxHVelocity = 0.2
 maxVVelocity = 0.5
 
-[node name="SphereCollision" type="CollisionShape3D" parent="Lander"]
+[node name="SphereCollision" type="CollisionShape3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.354339, 0)
 shape = SubResource("SphereShape3D_6o5a5")
 
-[node name="PadCollision1" type="CollisionShape3D" parent="Lander"]
+[node name="PadCollision1" type="CollisionShape3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00236082, 0.0138807, -0.436793)
 shape = SubResource("CylinderShape3D_6o5a5")
 
-[node name="PadCollision2" type="CollisionShape3D" parent="Lander"]
+[node name="PadCollision2" type="CollisionShape3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.437567, 0.0138807, 0.000437319)
 shape = SubResource("CylinderShape3D_6o5a5")
 
-[node name="PadCollision3" type="CollisionShape3D" parent="Lander"]
+[node name="PadCollision3" type="CollisionShape3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000336647, 0.0138807, 0.435643)
 shape = SubResource("CylinderShape3D_6o5a5")
 
-[node name="PadCollision4" type="CollisionShape3D" parent="Lander"]
+[node name="PadCollision4" type="CollisionShape3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.436893, 0.0138807, 0.000437319)
 shape = SubResource("CylinderShape3D_6o5a5")
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Lander"]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.76808, -4.83665, 0)
 stream = ExtResource("4_l5r3m")
 
-[node name="AudioSteam" type="AudioStreamPlayer3D" parent="Lander"]
+[node name="AudioSteam" type="AudioStreamPlayer3D" parent="SubViewport/Lander"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.76808, -4.83665, 0)
 stream = ExtResource("4_bbqu6")
 parameters/looping = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Lander"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport/Lander"]
 transform = Transform3D(0.09, 0, 0, 0, 0.09, 0, 0, 0, 0.09, 0, 0, 0)
 material_override = ExtResource("6_p0ojs")
 mesh = ExtResource("6_6o5a5")
 
-[node name="BottomThrustParticles" type="CPUParticles3D" parent="Lander"]
+[node name="BottomThrustParticles" type="CPUParticles3D" parent="SubViewport/Lander"]
 emitting = false
 amount = 15
 mesh = SubResource("SphereMesh_6o5a5")
@@ -129,7 +147,7 @@ gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.5
 initial_velocity_max = 2.0
 
-[node name="LeftThrustParticles" type="CPUParticles3D" parent="Lander"]
+[node name="LeftThrustParticles" type="CPUParticles3D" parent="SubViewport/Lander"]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -0.19, 0.4, 0)
 emitting = false
 amount = 15
@@ -140,7 +158,7 @@ gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.5
 initial_velocity_max = 2.0
 
-[node name="RightThrustParticles" type="CPUParticles3D" parent="Lander"]
+[node name="RightThrustParticles" type="CPUParticles3D" parent="SubViewport/Lander"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.19, 0.4, 0)
 emitting = false
 amount = 15
@@ -151,36 +169,55 @@ gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.5
 initial_velocity_max = 2.0
 
-[node name="RigidBody3D" type="RigidBody3D" parent="Lander"]
+[node name="LandingPad" type="RigidBody3D" parent="SubViewport/Lander"]
+gravity_scale = 0.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Lander/RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewport/Lander/LandingPad"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.151924, 0)
 shape = SubResource("CylinderShape3D_p0ojs")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.72812, 0)
+[node name="StaticBody3D" type="StaticBody3D" parent="SubViewport" groups=["Landing"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewport/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_bbqu6")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="SubViewport/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+height = 1.0
+sides = 16
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.44621, 10.7392, 0)
 shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewport"]
+environment = SubResource("Environment_svmpl")
+
+[node name="Camera3D2" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 4.26764, 15.5184, 4.76837e-07)
+attributes = SubResource("CameraAttributesPractical_6o5a5")
+projection = 1
+current = true
+size = 10.0
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 5)
 environment = SubResource("Environment_uny31")
 attributes = SubResource("CameraAttributesPractical_svmpl")
+current = true
 fov = 60.0
 script = ExtResource("5_mcpu6")
-target = NodePath("../Lander")
+target = NodePath("../SubViewport/Lander")
 
 [node name="AudioListener3D" type="AudioListener3D" parent="Camera3D"]
 current = true
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["Landing"]]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("CylinderShape3D_bbqu6")
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-height = 1.0
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -0.105327, -0.994438, 0, 0.994438, -0.105327, -0.471112, -0.138005, -1.66359)
+material_override = SubResource("StandardMaterial3D_p0ojs")
+mesh = SubResource("PlaneMesh_m08qq")
+skeleton = NodePath("../..")
 
 [node name="Stars" parent="." instance=ExtResource("7_l5r3m")]
 script = ExtResource("8_qbj3y")
@@ -189,4 +226,4 @@ star_count = 10000
 rng_seed = 1234
 generate_at_origin = false
 
-[connection signal="body_entered" from="Lander" to="Lander" method="_on_body_entered"]
+[connection signal="body_entered" from="SubViewport/Lander" to="SubViewport/Lander" method="_on_body_entered"]
